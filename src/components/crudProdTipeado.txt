@@ -1,0 +1,165 @@
+import React, { useEffect, useState } from "react";
+import { Table, Button, Form, Modal } from "react-bootstrap";
+
+
+const API_URL="https://6935ba1bfa8e704dafbeb23f.mockapi.io/api/v1/products";//URL DE LA MOCKAPI
+
+
+const CrudProductos = () => {
+    const [productos, setProductos] = useState([]);
+    const [show, setShow] = useState(false);//formulario nodal
+    const [form, setForm] = useState({
+        title: "",
+        description: "",
+        price: "",
+        stock: "",
+        rubro: "",
+        image: "",
+    });
+
+    const [editId, setEditId] = useState(null);
+
+    //fetch (peticion) a mockapi para obtener los productos
+        const getProductos = () => {
+            fetch(API_URL)
+                .then((res) => res.json())
+                .then((data) => setProductos(data))
+                .catch((error) => console.error("Error al obtener productos: ", error));
+        };
+    
+    //funcion para cerrar el formulario modal (antes de cerrar borrra los valores)
+        const handleClose = () => {//manejador
+            setShow(false);
+            setForm({title: "", description: "", price: "", stock: "", rubro: "", image: "" });
+            setEditId(null);
+        };
+
+    //funcion para abril el formulario modal
+        const handleShow = () => {
+            setShow(true);
+            if (producto) {
+                setForm({
+                    ...producto,//operador de propagacion: cuando llega un producto lo descompone y lo mete en otro objeto nuevo
+                    price: Number(producto.price),//como json lo manda en texto lo paso a numero
+                    stock: Number(producto.stock),//como json lo manda en texto lo paso a numero
+            });            
+            setEditId(producto.id);
+        }
+    };
+
+    //Funcion crear o editar
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        const productData = {
+            ...form,
+            price: Number(form.price),//como json lo manda en texto lo paso a numero
+            stock: Number(form.stock),//como json lo manda en texto lo paso a numero
+        };
+
+        const method = editId ? "PUT" : "POST";//funcion ternaria si existe un id toma el valor PUT (actualizar), sino toma POST (crea nuevo registro)
+        const url = editId ? `${API_URL}/${editId}` : API_URL;
+
+            fetch(url, {
+                method: method,
+                headers: { "Content-Type": "application/json"},
+                body: JSON.stringify(productData),
+            })
+                .then((res) => {
+                    if (!res.ok) throw new Error("Error al guardar el producto");
+                    return res.json();
+                })
+                .then(() => {
+                    handleClose();
+                    getProductos();
+                })
+                .catch((error) => console.error("Error; ", error));
+            };
+
+    //Funcion eliminar
+    const eliminarProducto = (id) => {
+        if (!window.confirm("Seguro que quieres eliminar este producto?"));//se puede usar sweet alert  o alga asi
+
+        fetch(`${API_URL}/${id}`, {method: "DELETE"})
+            .then((res) => {
+                if (!res.ok) throw new Error("Error al eliminar el producto");
+                getProductos();
+                })
+                .catch((error) => console.error("Error; ", error));
+    };
+
+    //Funcion cargar productos
+    useEffect(() => {
+        getProductos();
+    }, []);
+
+
+    //ACA COMIENZA EL HTML
+
+    <div className="container mt-4">
+        <h2>CRUD de Productos</h2>
+        <button className="mb-3" onClick={() => handleShow()}>
+            Agregar Producto
+        </button>
+
+        <table striped bordered hover>
+            <thead>
+                <tr>
+                    <th>Titulo</th>
+                    <th>Descripcion</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Rubro</th>
+                    <th>Imagen</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {productos.map((prod) => (//map hace una iteracion sobre los productos
+                    <tr key={prod.id}>
+                        <td>{prod.title}</td>
+                        <td>{prod.description}</td>
+                        <td>${Number(prod.price).toFixed(2)}</td>
+                        <td>{prod.stock}</td>
+                        <td>{prod.rubro}</td>
+                        <td>
+                            {prod.image?.startsWith("http") ? (//chequea que la imagen empiece con "http"
+                                <img 
+                                    src="{prod.image}" 
+                                    alt="{prod.title}"
+                                    width={50}
+                                    height={50}
+                                    style={{ objectFit: "cover" }} 
+                                />
+                            )   :   (
+                                <span>{prod.image}</span>
+                            )}
+                        </td>
+                        <td>
+                            <button
+                                size="sm"
+                                variant="warning"
+                                onClick={() => handleShow(prod)}
+                                >
+                                    Editar
+                            </button>
+
+                            <button
+                                size="sm"
+                                variant="danger"
+                                onClick={() => eliminarProducto(prod.id)}
+                                >
+                                    Eliminar
+                            </button>
+                        </td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+
+        
+  );
+
+  export default CrudProductos;
+};
+

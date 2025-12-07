@@ -1,0 +1,16 @@
+
+-bootstrap
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+
+npm install react-router-dom
+
+
+npm install font-awesome
+import 'font-awesome/css/font-awesome.min.css';
+
+
+npm install @fortawesome/fontawesome-svg-core
+npm install @fortawesome/free-solid-svg-icons
+npm install @fortawesome/react-fontawesome
