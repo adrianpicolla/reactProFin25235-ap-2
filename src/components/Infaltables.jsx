@@ -1,11 +1,11 @@
 import React from 'react';
-import ProductList from './ProductList';
+import ProductListPromo from './ProductListPromo';
 
 const Infaltables = () => {
   return (
     <div className="container">
-      <h1>Infaltables</h1>
-      <ProductList category="jewelery" />
+      <h1>Promos Infaltables</h1>
+      <ProductListPromo promo="si" />
     </div>
   );
 };

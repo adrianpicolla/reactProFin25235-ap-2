@@ -1,11 +1,11 @@
 import React from 'react';
-import ProductList from './ProductList';
+import ProductListOf from './ProductListOf';
 
 const Ofertas = () => {
   return (
     <div className="container">
-      <h1>Ofertas</h1>
-      <ProductList category="men's clothing" />
+      <h1>Ofertas de la semana</h1>
+      <ProductListOf oferta="si" />
     </div>
   );
 };

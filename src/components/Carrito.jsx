@@ -9,7 +9,28 @@ const Carrito = () => {
     setCarrito(prev => prev.filter(producto => producto.id !== id));
   };
 
-  const total = carrito.reduce((acc, item) => acc + Number(item.price) * item.cantidad, 0);
+  const sumarProducto = (id) => {
+    setCarrito(prev =>
+      prev.map(item =>
+        item.id === id ? { ...item, cantidad: item.cantidad + 1 } : item
+      )
+    );
+  };
+
+  const restarProducto = (id) => {
+    setCarrito(prev =>
+      prev
+        .map(item =>
+          item.id === id ? { ...item, cantidad: item.cantidad - 1 } : item
+        )
+        .filter(item => item.cantidad > 0) // Si llega a 0, se elimina
+    );
+  };
+
+  const total = carrito.reduce(
+    (acc, item) => acc + Number(item.price) * item.cantidad,
+    0
+  );
 
   if (carrito.length === 0) {
     return (
@@ -29,7 +50,7 @@ const Carrito = () => {
             <th>Precio unitario</th>
             <th>Cantidad</th>
             <th>Total</th>
-            <th></th>
+            <th>Acción</th>
           </tr>
         </thead>
         <tbody>
@@ -41,17 +62,37 @@ const Carrito = () => {
               <td>${(Number(item.price) * item.cantidad).toFixed(2)}</td>
               <td>
                 <Button
+                  className="me-1"
+                  variant="success"
+                  size="sm"
+                  onClick={() => sumarProducto(item.id)}
+                >
+                  +
+                </Button>
+
+                <Button
+                  className="me-1"
+                  variant="warning"
+                  size="sm"
+                  onClick={() => restarProducto(item.id)}
+                >
+                  -
+                </Button>
+
+                <Button
+                  className="me-1"
                   variant="danger"
                   size="sm"
                   onClick={() => eliminarDelCarrito(item.id)}
                 >
-                  Eliminar
+                  X
                 </Button>
               </td>
             </tr>
           ))}
         </tbody>
       </Table>
+
       <h5 className="text-end">Total a pagar: ${total.toFixed(2)}</h5>
     </Container>
   );

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button, Form, Modal } from "react-bootstrap";
 
-const API_URL = "https://68489b9bec44b9f349416b0e.mockapi.io/api/productos";
+const API_URL = "https://6935ba1bfa8e704dafbeb23f.mockapi.io/api/v1/products";
 
 const CrudProductos = () => {
   const [productos, setProductos] = useState([]);
@@ -12,6 +12,9 @@ const CrudProductos = () => {
     price: "",
     stock: "",
     image: "",
+    rubro: "",
+    oferta: "",
+    promo: "",
   });
   const [editId, setEditId] = useState(null);
 
@@ -27,7 +30,7 @@ const CrudProductos = () => {
   // cierro el modal
   const handleClose = () => {
     setShow(false);
-    setForm({ title: "", description: "", price: "", stock: "", image: "" });
+    setForm({ title: "", description: "", price: "", stock: "", image: "", rubro: "" });
     setEditId(null);
   };
 
@@ -105,6 +108,9 @@ const CrudProductos = () => {
             <th>Precio</th>
             <th>Stock</th>
             <th>Imagen</th>
+            <th>Rubro</th>
+            <th>Oferta</th>
+            <th>Promo</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -128,6 +134,15 @@ const CrudProductos = () => {
                   <span>{prod.image}</span>
                 )}
               </td>
+                <td>
+                    {prod.rubro}
+                </td>
+                <td>
+                    {prod.oferta}
+                </td>
+                <td>
+                    {prod.promo}
+                </td>
               <td>
                 <Button
                   size="sm"
@@ -209,6 +224,33 @@ const CrudProductos = () => {
               />
             </Form.Group>
 
+            <Form.Group className="mb-2">
+              <Form.Label>Rubro</Form.Label>
+              <Form.Control
+                value={form.rubro}
+                onChange={(e) => setForm({ ...form, rubro: e.target.value })}
+                required
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-2">
+              <Form.Label>Oferta</Form.Label>
+              <Form.Control
+                value={form.oferta}
+                onChange={(e) => setForm({ ...form, oferta: e.target.value })}
+                required
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-2">
+              <Form.Label>Promo</Form.Label>
+              <Form.Control
+                value={form.promo}
+                onChange={(e) => setForm({ ...form, promo: e.target.value })}
+                required
+              />
+            </Form.Group>
+            
             <Button type="submit" className="mt-2">
               Guardar
             </Button>

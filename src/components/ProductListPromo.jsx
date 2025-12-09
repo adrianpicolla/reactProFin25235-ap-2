@@ -3,7 +3,7 @@ import { Row, Col ,Form,Button} from 'react-bootstrap';
 import ProductCard from './ProductCard';
 import { CartContext } from './CartContext';
 
-const ProductList = ({ category = null }) => {
+const ProductListPromo = ({ promo = null }) => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,11 +13,10 @@ const ProductList = ({ category = null }) => {
  
   useEffect(() => {
     let url = 'https://6935ba1bfa8e704dafbeb23f.mockapi.io/api/v1/products';
+    if (promo) {
+      url = `https://6935ba1bfa8e704dafbeb23f.mockapi.io/api/v1/products?promo=${promo}`;
+    }
 
-        if(category)
-        {
-          url = `https://6935ba1bfa8e704dafbeb23f.mockapi.io/api/v1/products?rubro=${category}`;
-        }
   fetch(url)
       .then((response) => response.json())
       .then((data) => {
@@ -29,7 +28,7 @@ const ProductList = ({ category = null }) => {
         console.error('Error fetching data:', error);
         setLoading(false);
       });
-  }, [category]);
+  }, [promo]);
 
  const handleFilter = () => {
     let filtered = products;
@@ -112,4 +111,4 @@ const ProductList = ({ category = null }) => {
   );
 };
 
-export default ProductList;
+export default ProductListPromo;
