@@ -9,14 +9,16 @@ const Carrito = () => {
     setCarrito(prev => prev.filter(producto => producto.id !== id));
   };
 
-  const sumarProducto = (id) => {
+  //funcion para sumar producto
+  const sumarProducto = (id) => {//recibe el id del item
     setCarrito(prev =>
-      prev.map(item =>
-        item.id === id ? { ...item, cantidad: item.cantidad + 1 } : item
+      prev.map(item =>//recorre el aaray
+        item.id === id ? { ...item, cantidad: item.cantidad + 1 } : item//cuando lo encuentra suma uno y da el nuevo valor
       )
     );
   };
 
+  //funcion restar producto (al final chequea que el resultado no de 0, de ser asi se elimina )
   const restarProducto = (id) => {
     setCarrito(prev =>
       prev
@@ -65,7 +67,7 @@ const Carrito = () => {
                   className="me-1"
                   variant="success"
                   size="sm"
-                  onClick={() => sumarProducto(item.id)}
+                  onClick={() => sumarProducto(item.id)}//llama a la funcion para sumar producto (envia el id del item)
                 >
                   +
                 </Button>
